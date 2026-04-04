@@ -1,13 +1,23 @@
 -- =============================================
 -- Track My Workout - Supabase Migration
 -- Run this in the Supabase SQL Editor
+-- Safe to re-run: drops and recreates everything
 -- =============================================
+
+-- Drop existing tables (reverse dependency order)
+drop table if exists exercise_sets cascade;
+drop table if exists session_exercises cascade;
+drop table if exists workout_sessions cascade;
+drop table if exists template_exercises cascade;
+drop table if exists day_templates cascade;
+drop table if exists exercises cascade;
 
 -- 1. Exercises library
 create table exercises (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   category text not null check (category in ('explosive', 'strength', 'core', 'cardio', 'mobility', 'finisher', 'warmup')),
+  tracking_type text not null default 'weighted' check (tracking_type in ('weighted', 'bodyweight', 'timed')),
   muscle_group text not null,
   created_at timestamptz default now()
 );
@@ -61,15 +71,16 @@ create table exercise_sets (
   set_number int not null,
   weight_kg numeric not null default 0,
   reps int not null default 0,
+  duration_sec int not null default 0,
   rpe int check (rpe between 1 and 10),
   skipped boolean not null default false
 );
 
 -- Indexes for common queries
-create index idx_workout_sessions_date on workout_sessions(date);
-create index idx_session_exercises_session on session_exercises(session_id);
-create index idx_exercise_sets_session_exercise on exercise_sets(session_exercise_id);
-create index idx_template_exercises_template on template_exercises(template_id);
+create index if not exists idx_workout_sessions_date on workout_sessions(date);
+create index if not exists idx_session_exercises_session on session_exercises(session_id);
+create index if not exists idx_exercise_sets_session_exercise on exercise_sets(session_exercise_id);
+create index if not exists idx_template_exercises_template on template_exercises(template_id);
 
 -- Enable RLS (permissive for single user)
 alter table exercises enable row level security;

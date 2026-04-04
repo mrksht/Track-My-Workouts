@@ -2,6 +2,7 @@ export interface Exercise {
   id: string;
   name: string;
   category: 'explosive' | 'strength' | 'core' | 'cardio' | 'mobility' | 'finisher' | 'warmup';
+  tracking_type: 'weighted' | 'bodyweight' | 'timed';
   muscle_group: string;
 }
 
@@ -53,6 +54,7 @@ export interface ExerciseSet {
   session_exercise_id?: string;
   set_number: number;
   weight_kg: number;
+  duration_sec: number;
   reps: number;
   rpe: number | null;
   skipped: boolean;

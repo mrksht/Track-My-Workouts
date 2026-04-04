@@ -164,27 +164,21 @@ export default function HistoryPage() {
                     {!ex.skipped && ex.sets && ex.sets.length > 0 && (
                       <div className="space-y-0.5">
                         {(() => {
-                          const isCardio = ['finisher', 'cardio'].includes(ex.section);
+                          const tt = ex.exercise?.tracking_type || 'weighted';
                           return ex.sets.map((set: ExerciseSet) => (
                             <div
                               key={set.set_number}
-                              className="text-xs text-text-secondary grid grid-cols-4 gap-2"
+                              className="text-xs text-text-secondary grid grid-cols-3 gap-2"
                             >
                               <span className="text-text-muted">
-                                {isCardio ? `Rnd` : `Set`} {set.set_number}
+                                Set {set.set_number}
                               </span>
-                              {isCardio ? (
-                                <>
-                                  <span className={set.skipped ? 'text-text-muted' : 'text-accent-green'}>
-                                    {set.skipped ? 'Skipped' : 'Done'}
-                                  </span>
-                                  <span />
-                                </>
+                              {tt === 'timed' ? (
+                                <span>{(set as any).duration_sec || 0}s</span>
+                              ) : tt === 'bodyweight' ? (
+                                <span>{set.reps} reps</span>
                               ) : (
-                                <>
-                                  <span>{set.weight_kg}kg</span>
-                                  <span>{set.reps} reps</span>
-                                </>
+                                <span>{set.weight_kg}kg × {set.reps}</span>
                               )}
                               <span>{set.rpe ? `RPE ${set.rpe}` : '-'}</span>
                             </div>

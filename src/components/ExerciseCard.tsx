@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ExerciseSet, WorkoutExerciseEntry } from '../types/database';
-import { SkipForward, ArrowLeftRight, RotateCcw, Check } from 'lucide-react';
+import { SkipForward, ArrowLeftRight, RotateCcw } from 'lucide-react';
 
 interface Props {
   entry: WorkoutExerciseEntry;
@@ -17,15 +17,11 @@ const SECTION_COLORS: Record<string, string> = {
   mobility: 'bg-purple-500/20 text-purple-400',
 };
 
-// Sections/categories where weight tracking doesn't apply
-const CARDIO_SECTIONS = new Set(['finisher', 'cardio']);
-
 export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
   const [expanded, setExpanded] = useState(true);
   const { exercise, templateExercise, skipped, sets, originalExercise } = entry;
 
-  const isCardioStyle = CARDIO_SECTIONS.has(templateExercise.section) ||
-    CARDIO_SECTIONS.has(exercise.category);
+  const trackingType = exercise.tracking_type; // 'weighted' | 'bodyweight' | 'timed'
 
   const toggleSkip = () => {
     const newSkipped = !skipped;
@@ -34,6 +30,7 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
       skipped: newSkipped,
       weight_kg: newSkipped ? 0 : s.weight_kg,
       reps: newSkipped ? 0 : s.reps,
+      duration_sec: newSkipped ? 0 : s.duration_sec,
       rpe: newSkipped ? null : s.rpe,
     }));
     onUpdate({ ...entry, skipped: newSkipped, sets: newSets });
@@ -112,64 +109,78 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
       {/* Sets */}
       {expanded && !skipped && (
         <div className="px-3 pb-3">
-          {isCardioStyle ? (
-            /* ---- Cardio/Finisher: round-based, no weight ---- */
+          {trackingType === 'timed' ? (
+            /* ---- TIMED: duration (sec) + RPE per round ---- */
             <>
-              <div className="grid grid-cols-[1.5rem_1fr_3.5rem] gap-1.5 text-xs text-text-muted uppercase mb-1.5 px-1">
-                <span>Rnd</span>
-                <span>Done</span>
+              <div className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 text-xs text-text-muted uppercase mb-1.5">
+                <span>#</span>
+                <span>Duration (sec)</span>
                 <span>RPE</span>
               </div>
               {sets.map((set, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[1.5rem_1fr_3.5rem] gap-1.5 items-center mb-2"
+                  className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 items-center mb-2"
                 >
                   <span className="text-xs text-text-muted text-center">{set.set_number}</span>
-
-                  {/* Completed toggle */}
-                  <button
-                    onClick={() => {
-                      const done = !set.skipped;
-                      // skipped=false means completed, skipped=true means not done
-                      // We invert: reps=1 for done, reps=0 for not done
-                      const newSets = [...sets];
-                      newSets[i] = {
-                        ...newSets[i],
-                        reps: done ? 0 : 1,
-                        weight_kg: 0,
-                        skipped: done,
-                      };
-                      onUpdate({ ...entry, sets: newSets });
-                    }}
-                    className={`h-10 rounded-lg flex items-center justify-center gap-1.5 text-sm font-medium transition-colors ${
-                      !set.skipped
-                        ? 'bg-accent-green/20 text-accent-green border border-accent-green/30'
-                        : 'bg-surface-light text-text-muted border border-border hover:border-accent-green/30'
-                    }`}
-                  >
-                    <Check className="w-3.5 h-3.5" />
-                    {!set.skipped ? 'Done' : 'Tap to complete'}
-                  </button>
-
-                  {/* RPE */}
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={set.duration_sec || ''}
+                    onChange={(e) => updateSet(i, 'duration_sec', Number(e.target.value) || 0)}
+                    className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="sec"
+                  />
                   <select
                     value={set.rpe ?? ''}
                     onChange={(e) => updateSet(i, 'rpe', e.target.value ? Number(e.target.value) : null)}
-                    className="h-9 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-1 focus:ring-primary appearance-none"
+                    className="w-full h-10 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
                   >
                     <option value="">-</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
-                      <option key={v} value={v}>
-                        {v}
-                      </option>
+                      <option key={v} value={v}>{v}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </>
+          ) : trackingType === 'bodyweight' ? (
+            /* ---- BODYWEIGHT: reps + RPE (no weight) ---- */
+            <>
+              <div className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 text-xs text-text-muted uppercase mb-1.5">
+                <span>#</span>
+                <span>Reps</span>
+                <span>RPE</span>
+              </div>
+              {sets.map((set, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 items-center mb-2"
+                >
+                  <span className="text-xs text-text-muted text-center">{set.set_number}</span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={set.reps || ''}
+                    onChange={(e) => updateSet(i, 'reps', Number(e.target.value) || 0)}
+                    className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="0"
+                  />
+                  <select
+                    value={set.rpe ?? ''}
+                    onChange={(e) => updateSet(i, 'rpe', e.target.value ? Number(e.target.value) : null)}
+                    className="w-full h-10 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
+                  >
+                    <option value="">-</option>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
+                      <option key={v} value={v}>{v}</option>
                     ))}
                   </select>
                 </div>
               ))}
             </>
           ) : (
-            /* ---- Strength: weight + reps + RPE ---- */
+            /* ---- WEIGHTED: kg + reps + RPE ---- */
             <>
               <div className="grid grid-cols-[1.5rem_1fr_1fr_2.8rem] gap-2 text-xs text-text-muted uppercase mb-1.5">
                 <span>#</span>
@@ -177,49 +188,40 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
                 <span>Reps</span>
                 <span>RPE</span>
               </div>
-
-          {sets.map((set, i) => (
-            <div
-              key={i}
-              className="grid grid-cols-[1.5rem_1fr_1fr_2.8rem] gap-2 items-center mb-2"
-            >
-              <span className="text-xs text-text-muted text-center">{set.set_number}</span>
-
-              {/* Weight */}
-              <input
-                type="number"
-                inputMode="decimal"
-                value={set.weight_kg || ''}
-                onChange={(e) => updateSet(i, 'weight_kg', Number(e.target.value) || 0)}
-                className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="0"
-              />
-
-              {/* Reps */}
-              <input
-                type="number"
-                inputMode="numeric"
-                value={set.reps || ''}
-                onChange={(e) => updateSet(i, 'reps', Number(e.target.value) || 0)}
-                className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="0"
-              />
-
-              {/* RPE */}
-              <select
-                value={set.rpe ?? ''}
-                onChange={(e) => updateSet(i, 'rpe', e.target.value ? Number(e.target.value) : null)}
-                className="w-full h-10 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
-              >
-                <option value="">-</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
+              {sets.map((set, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-[1.5rem_1fr_1fr_2.8rem] gap-2 items-center mb-2"
+                >
+                  <span className="text-xs text-text-muted text-center">{set.set_number}</span>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    value={set.weight_kg || ''}
+                    onChange={(e) => updateSet(i, 'weight_kg', Number(e.target.value) || 0)}
+                    className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="0"
+                  />
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={set.reps || ''}
+                    onChange={(e) => updateSet(i, 'reps', Number(e.target.value) || 0)}
+                    className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="0"
+                  />
+                  <select
+                    value={set.rpe ?? ''}
+                    onChange={(e) => updateSet(i, 'rpe', e.target.value ? Number(e.target.value) : null)}
+                    className="w-full h-10 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
+                  >
+                    <option value="">-</option>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
+                      <option key={v} value={v}>{v}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
             </>
           )}
         </div>
