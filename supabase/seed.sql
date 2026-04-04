@@ -6,63 +6,63 @@
 -- ============ EXERCISES ============
 
 -- Day 1: Upper Body Strength + Power
-insert into exercises (id, name, category, muscle_group) values
-  ('a1000001-0000-0000-0000-000000000001', 'Medicine Ball Chest Throws', 'explosive', 'chest'),
-  ('a1000001-0000-0000-0000-000000000002', 'Plyo Push-ups', 'explosive', 'chest'),
-  ('a1000001-0000-0000-0000-000000000003', 'Bench Press', 'strength', 'chest'),
-  ('a1000001-0000-0000-0000-000000000004', 'Pull-ups / Assisted', 'strength', 'back'),
-  ('a1000001-0000-0000-0000-000000000005', 'Overhead Press', 'strength', 'shoulders'),
-  ('a1000001-0000-0000-0000-000000000006', 'Seated Cable Rows', 'strength', 'back'),
-  ('a1000001-0000-0000-0000-000000000007', 'Hanging Leg Raises', 'core', 'abs'),
-  ('a1000001-0000-0000-0000-000000000008', 'Russian Twists', 'core', 'abs'),
-  ('a1000001-0000-0000-0000-000000000009', 'Assault Bike / Rower Intervals', 'finisher', 'full body');
+insert into exercises (id, name, category, tracking_type, muscle_group) values
+  ('a1000001-0000-0000-0000-000000000001', 'Medicine Ball Chest Throws', 'explosive', 'weighted', 'chest'),
+  ('a1000001-0000-0000-0000-000000000002', 'Plyo Push-ups', 'explosive', 'bodyweight', 'chest'),
+  ('a1000001-0000-0000-0000-000000000003', 'Bench Press', 'strength', 'weighted', 'chest'),
+  ('a1000001-0000-0000-0000-000000000004', 'Pull-ups / Assisted', 'strength', 'bodyweight', 'back'),
+  ('a1000001-0000-0000-0000-000000000005', 'Overhead Press', 'strength', 'weighted', 'shoulders'),
+  ('a1000001-0000-0000-0000-000000000006', 'Seated Cable Rows', 'strength', 'weighted', 'back'),
+  ('a1000001-0000-0000-0000-000000000007', 'Hanging Leg Raises', 'core', 'bodyweight', 'abs'),
+  ('a1000001-0000-0000-0000-000000000008', 'Russian Twists', 'core', 'weighted', 'abs'),
+  ('a1000001-0000-0000-0000-000000000009', 'Assault Bike / Rower Intervals', 'finisher', 'timed', 'full body');
 
 -- Day 2: Lower Body Strength + Explosiveness
-insert into exercises (id, name, category, muscle_group) values
-  ('a2000001-0000-0000-0000-000000000001', 'Box Jumps', 'explosive', 'legs'),
-  ('a2000001-0000-0000-0000-000000000002', 'Jump Squats (Light Weight)', 'explosive', 'legs'),
-  ('a2000001-0000-0000-0000-000000000003', 'Barbell Squats', 'strength', 'legs'),
-  ('a2000001-0000-0000-0000-000000000004', 'Romanian Deadlifts', 'strength', 'legs'),
-  ('a2000001-0000-0000-0000-000000000005', 'Walking Lunges', 'strength', 'legs'),
-  ('a2000001-0000-0000-0000-000000000006', 'Calf Raises', 'strength', 'legs'),
-  ('a2000001-0000-0000-0000-000000000007', 'Plank', 'core', 'abs'),
-  ('a2000001-0000-0000-0000-000000000008', 'Cable Crunch', 'core', 'abs'),
-  ('a2000001-0000-0000-0000-000000000009', 'Treadmill Intervals', 'finisher', 'full body');
+insert into exercises (id, name, category, tracking_type, muscle_group) values
+  ('a2000001-0000-0000-0000-000000000001', 'Box Jumps', 'explosive', 'bodyweight', 'legs'),
+  ('a2000001-0000-0000-0000-000000000002', 'Jump Squats (Light Weight)', 'explosive', 'weighted', 'legs'),
+  ('a2000001-0000-0000-0000-000000000003', 'Barbell Squats', 'strength', 'weighted', 'legs'),
+  ('a2000001-0000-0000-0000-000000000004', 'Romanian Deadlifts', 'strength', 'weighted', 'legs'),
+  ('a2000001-0000-0000-0000-000000000005', 'Walking Lunges', 'strength', 'weighted', 'legs'),
+  ('a2000001-0000-0000-0000-000000000006', 'Calf Raises', 'strength', 'weighted', 'legs'),
+  ('a2000001-0000-0000-0000-000000000007', 'Plank', 'core', 'timed', 'abs'),
+  ('a2000001-0000-0000-0000-000000000008', 'Cable Crunch', 'core', 'weighted', 'abs'),
+  ('a2000001-0000-0000-0000-000000000009', 'Treadmill Intervals', 'finisher', 'timed', 'full body');
 
 -- Day 3: Active Recovery + Core + Mobility
-insert into exercises (id, name, category, muscle_group) values
-  ('a3000001-0000-0000-0000-000000000001', 'Deep Squat Hold', 'mobility', 'legs'),
-  ('a3000001-0000-0000-0000-000000000002', 'Hip Flexor Stretch', 'mobility', 'hips'),
-  ('a3000001-0000-0000-0000-000000000003', 'Thoracic Rotations', 'mobility', 'back'),
-  ('a3000001-0000-0000-0000-000000000004', 'Shoulder Mobility', 'mobility', 'shoulders'),
-  ('a3000001-0000-0000-0000-000000000005', 'Dead Bugs', 'core', 'abs'),
-  ('a3000001-0000-0000-0000-000000000006', 'Side Plank', 'core', 'abs'),
-  ('a3000001-0000-0000-0000-000000000007', 'Cable Woodchoppers', 'core', 'abs'),
-  ('a3000001-0000-0000-0000-000000000008', 'Incline Treadmill Walk', 'cardio', 'full body');
+insert into exercises (id, name, category, tracking_type, muscle_group) values
+  ('a3000001-0000-0000-0000-000000000001', 'Deep Squat Hold', 'mobility', 'timed', 'legs'),
+  ('a3000001-0000-0000-0000-000000000002', 'Hip Flexor Stretch', 'mobility', 'timed', 'hips'),
+  ('a3000001-0000-0000-0000-000000000003', 'Thoracic Rotations', 'mobility', 'bodyweight', 'back'),
+  ('a3000001-0000-0000-0000-000000000004', 'Shoulder Mobility', 'mobility', 'timed', 'shoulders'),
+  ('a3000001-0000-0000-0000-000000000005', 'Dead Bugs', 'core', 'bodyweight', 'abs'),
+  ('a3000001-0000-0000-0000-000000000006', 'Side Plank', 'core', 'timed', 'abs'),
+  ('a3000001-0000-0000-0000-000000000007', 'Cable Woodchoppers', 'core', 'weighted', 'abs'),
+  ('a3000001-0000-0000-0000-000000000008', 'Incline Treadmill Walk', 'cardio', 'timed', 'full body');
 
 -- Day 4: Push + Conditioning
-insert into exercises (id, name, category, muscle_group) values
-  ('a4000001-0000-0000-0000-000000000001', 'Medicine Ball Slams', 'explosive', 'full body'),
-  ('a4000001-0000-0000-0000-000000000002', 'Clap Push-ups', 'explosive', 'chest'),
-  ('a4000001-0000-0000-0000-000000000003', 'Incline Dumbbell Press', 'strength', 'chest'),
-  ('a4000001-0000-0000-0000-000000000004', 'Dips', 'strength', 'chest'),
-  ('a4000001-0000-0000-0000-000000000005', 'Shoulder Press', 'strength', 'shoulders'),
-  ('a4000001-0000-0000-0000-000000000006', 'Lateral Raises', 'strength', 'shoulders'),
-  ('a4000001-0000-0000-0000-000000000007', 'Toe Touches', 'core', 'abs'),
-  ('a4000001-0000-0000-0000-000000000008', 'Plank Shoulder Taps', 'core', 'abs'),
-  ('a4000001-0000-0000-0000-000000000009', 'Shuttle Runs', 'finisher', 'full body');
+insert into exercises (id, name, category, tracking_type, muscle_group) values
+  ('a4000001-0000-0000-0000-000000000001', 'Medicine Ball Slams', 'explosive', 'weighted', 'full body'),
+  ('a4000001-0000-0000-0000-000000000002', 'Clap Push-ups', 'explosive', 'bodyweight', 'chest'),
+  ('a4000001-0000-0000-0000-000000000003', 'Incline Dumbbell Press', 'strength', 'weighted', 'chest'),
+  ('a4000001-0000-0000-0000-000000000004', 'Dips', 'strength', 'bodyweight', 'chest'),
+  ('a4000001-0000-0000-0000-000000000005', 'Shoulder Press', 'strength', 'weighted', 'shoulders'),
+  ('a4000001-0000-0000-0000-000000000006', 'Lateral Raises', 'strength', 'weighted', 'shoulders'),
+  ('a4000001-0000-0000-0000-000000000007', 'Toe Touches', 'core', 'bodyweight', 'abs'),
+  ('a4000001-0000-0000-0000-000000000008', 'Plank Shoulder Taps', 'core', 'bodyweight', 'abs'),
+  ('a4000001-0000-0000-0000-000000000009', 'Shuttle Runs', 'finisher', 'timed', 'full body');
 
 -- Day 5: Pull + Posterior Chain + Speed
-insert into exercises (id, name, category, muscle_group) values
-  ('a5000001-0000-0000-0000-000000000001', 'Kettlebell Swings', 'explosive', 'full body'),
-  ('a5000001-0000-0000-0000-000000000002', 'Treadmill Sprint Starts', 'explosive', 'legs'),
-  ('a5000001-0000-0000-0000-000000000003', 'Deadlifts', 'strength', 'back'),
-  ('a5000001-0000-0000-0000-000000000004', 'Lat Pulldown', 'strength', 'back'),
-  ('a5000001-0000-0000-0000-000000000005', 'Barbell Rows', 'strength', 'back'),
-  ('a5000001-0000-0000-0000-000000000006', 'Face Pulls', 'strength', 'shoulders'),
-  ('a5000001-0000-0000-0000-000000000007', 'Hanging Knee Raises', 'core', 'abs'),
-  ('a5000001-0000-0000-0000-000000000008', 'Ab Rollout', 'core', 'abs'),
-  ('a5000001-0000-0000-0000-000000000009', 'Rowing Machine Intervals', 'finisher', 'full body');
+insert into exercises (id, name, category, tracking_type, muscle_group) values
+  ('a5000001-0000-0000-0000-000000000001', 'Kettlebell Swings', 'explosive', 'weighted', 'full body'),
+  ('a5000001-0000-0000-0000-000000000002', 'Treadmill Sprint Starts', 'explosive', 'timed', 'legs'),
+  ('a5000001-0000-0000-0000-000000000003', 'Deadlifts', 'strength', 'weighted', 'back'),
+  ('a5000001-0000-0000-0000-000000000004', 'Lat Pulldown', 'strength', 'weighted', 'back'),
+  ('a5000001-0000-0000-0000-000000000005', 'Barbell Rows', 'strength', 'weighted', 'back'),
+  ('a5000001-0000-0000-0000-000000000006', 'Face Pulls', 'strength', 'weighted', 'shoulders'),
+  ('a5000001-0000-0000-0000-000000000007', 'Hanging Knee Raises', 'core', 'bodyweight', 'abs'),
+  ('a5000001-0000-0000-0000-000000000008', 'Ab Rollout', 'core', 'bodyweight', 'abs'),
+  ('a5000001-0000-0000-0000-000000000009', 'Rowing Machine Intervals', 'finisher', 'timed', 'full body');
 
 
 -- ============ DAY TEMPLATES ============

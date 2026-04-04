@@ -55,10 +55,8 @@ export default function Workout() {
       .order('sort_order');
 
     if (templateExercises) {
-      const CARDIO_SECTIONS = new Set(['finisher', 'cardio']);
       const entries: WorkoutExerciseEntry[] = templateExercises.map((te: any) => {
         const ex = te.exercise as Exercise;
-        const isCardio = CARDIO_SECTIONS.has(te.section) || CARDIO_SECTIONS.has(ex.category);
         return {
           templateExercise: te,
           exercise: ex,
@@ -68,8 +66,9 @@ export default function Workout() {
             set_number: i + 1,
             weight_kg: 0,
             reps: 0,
+            duration_sec: 0,
             rpe: null,
-            skipped: isCardio, // cardio rounds start as "not done"
+            skipped: false,
           })),
         };
       });
@@ -145,6 +144,7 @@ export default function Workout() {
             set_number: set.set_number,
             weight_kg: set.weight_kg,
             reps: set.reps,
+            duration_sec: set.duration_sec,
             rpe: set.rpe,
             skipped: entry.skipped || set.skipped,
           });
