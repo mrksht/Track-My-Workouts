@@ -56,7 +56,6 @@ export interface ExerciseSet {
   weight_kg: number;
   duration_sec: number;
   reps: number;
-  rpe: number | null;
   skipped: boolean;
 }
 

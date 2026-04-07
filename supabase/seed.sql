@@ -10,7 +10,7 @@ insert into exercises (id, name, category, tracking_type, muscle_group) values
   ('a1000001-0000-0000-0000-000000000001', 'Medicine Ball Chest Throws', 'explosive', 'weighted', 'chest'),
   ('a1000001-0000-0000-0000-000000000002', 'Plyo Push-ups', 'explosive', 'bodyweight', 'chest'),
   ('a1000001-0000-0000-0000-000000000003', 'Bench Press', 'strength', 'weighted', 'chest'),
-  ('a1000001-0000-0000-0000-000000000004', 'Pull-ups / Assisted', 'strength', 'bodyweight', 'back'),
+  ('a1000001-0000-0000-0000-000000000004', 'Pull-ups / Assisted', 'strength', 'weighted', 'back'),
   ('a1000001-0000-0000-0000-000000000005', 'Overhead Press', 'strength', 'weighted', 'shoulders'),
   ('a1000001-0000-0000-0000-000000000006', 'Seated Cable Rows', 'strength', 'weighted', 'back'),
   ('a1000001-0000-0000-0000-000000000007', 'Hanging Leg Raises', 'core', 'bodyweight', 'abs'),
