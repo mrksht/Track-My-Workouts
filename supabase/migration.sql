@@ -72,7 +72,6 @@ create table exercise_sets (
   weight_kg numeric not null default 0,
   reps int not null default 0,
   duration_sec int not null default 0,
-  rpe int check (rpe between 1 and 10),
   skipped boolean not null default false
 );
 

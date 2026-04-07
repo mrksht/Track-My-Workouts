@@ -168,7 +168,7 @@ export default function HistoryPage() {
                           return ex.sets.map((set: ExerciseSet) => (
                             <div
                               key={set.set_number}
-                              className="text-xs text-text-secondary grid grid-cols-3 gap-2"
+                              className="text-xs text-text-secondary grid grid-cols-2 gap-2"
                             >
                               <span className="text-text-muted">
                                 Set {set.set_number}
@@ -180,7 +180,6 @@ export default function HistoryPage() {
                               ) : (
                                 <span>{set.weight_kg}kg × {set.reps}</span>
                               )}
-                              <span>{set.rpe ? `RPE ${set.rpe}` : '-'}</span>
                             </div>
                           ));
                         })()}

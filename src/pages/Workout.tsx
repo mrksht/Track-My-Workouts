@@ -67,7 +67,6 @@ export default function Workout() {
             weight_kg: 0,
             reps: 0,
             duration_sec: 0,
-            rpe: null,
             skipped: false,
           })),
         };
@@ -145,7 +144,6 @@ export default function Workout() {
             weight_kg: set.weight_kg,
             reps: set.reps,
             duration_sec: set.duration_sec,
-            rpe: set.rpe,
             skipped: entry.skipped || set.skipped,
           });
         });

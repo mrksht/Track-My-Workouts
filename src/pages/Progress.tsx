@@ -15,24 +15,41 @@ import { TrendingUp } from 'lucide-react';
 
 interface ChartDataPoint {
   date: string;
-  maxWeight: number;
-  totalVolume: number;
-  avgRpe: number | null;
+  // weighted
+  maxWeight?: number;
+  totalVolume?: number;
+  // bodyweight
+  totalReps?: number;
+  // timed
+  totalDuration?: number;
 }
+
+type TrackingType = 'weighted' | 'bodyweight' | 'timed';
+type Metric = 'maxWeight' | 'totalVolume' | 'totalReps' | 'totalDuration';
+
+const DEFAULT_METRIC: Record<TrackingType, Metric> = {
+  weighted: 'maxWeight',
+  bodyweight: 'totalReps',
+  timed: 'totalDuration',
+};
 
 export default function Progress() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<string>('');
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [loading, setLoading] = useState(false);
-  const [metric, setMetric] = useState<'maxWeight' | 'totalVolume'>('maxWeight');
+  const [metric, setMetric] = useState<Metric>('maxWeight');
 
   useEffect(() => {
     loadExercises();
   }, []);
 
   useEffect(() => {
-    if (selectedExercise) loadProgressData(selectedExercise);
+    if (selectedExercise) {
+      const ex = exercises.find((e) => e.id === selectedExercise);
+      if (ex) setMetric(DEFAULT_METRIC[ex.tracking_type]);
+      loadProgressData(selectedExercise);
+    }
   }, [selectedExercise]);
 
   async function loadExercises() {
@@ -101,38 +118,59 @@ export default function Progress() {
       }
     });
 
+    const selectedEx = exercises.find((e) => e.id === exerciseId);
+    const tt = selectedEx?.tracking_type || 'weighted';
+
     const chartPoints: ChartDataPoint[] = Object.entries(dateGroups)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, dateSets]) => {
-        const maxWeight = Math.max(...dateSets.map((s) => Number(s.weight_kg)));
-        const totalVolume = dateSets.reduce(
-          (sum, s) => sum + Number(s.weight_kg) * s.reps,
-          0
-        );
-        const rpeSets = dateSets.filter((s) => s.rpe != null);
-        const avgRpe =
-          rpeSets.length > 0
-            ? Math.round(
-                (rpeSets.reduce((sum, s) => sum + (s.rpe || 0), 0) / rpeSets.length) * 10
-              ) / 10
-            : null;
-
-        return {
+        const point: ChartDataPoint = {
           date: new Date(date).toLocaleDateString('en-GB', {
             day: 'numeric',
             month: 'short',
           }),
-          maxWeight,
-          totalVolume,
-          avgRpe,
         };
+
+        if (tt === 'weighted') {
+          point.maxWeight = Math.max(...dateSets.map((s) => Number(s.weight_kg)));
+          point.totalVolume = dateSets.reduce(
+            (sum, s) => sum + Number(s.weight_kg) * s.reps,
+            0
+          );
+        } else if (tt === 'bodyweight') {
+          point.totalReps = dateSets.reduce((sum, s) => sum + s.reps, 0);
+        } else {
+          // timed
+          point.totalDuration = dateSets.reduce((sum, s) => sum + (s.duration_sec || 0), 0);
+        }
+
+        return point;
       });
 
     setChartData(chartPoints);
     setLoading(false);
   }
 
-  const selectedExerciseName = exercises.find((e) => e.id === selectedExercise)?.name;
+  const selectedEx = exercises.find((e) => e.id === selectedExercise);
+  const selectedExerciseName = selectedEx?.name;
+  const trackingType = selectedEx?.tracking_type || 'weighted';
+
+  const metricLabel: Record<Metric, string> = {
+    maxWeight: 'Max Weight (kg)',
+    totalVolume: 'Total Volume (kg×reps)',
+    totalReps: 'Total Reps',
+    totalDuration: 'Total Duration (sec)',
+  };
+
+  const metricButtons: { key: Metric; label: string }[] =
+    trackingType === 'weighted'
+      ? [
+          { key: 'maxWeight', label: 'Max Weight' },
+          { key: 'totalVolume', label: 'Total Volume' },
+        ]
+      : trackingType === 'bodyweight'
+        ? [{ key: 'totalReps', label: 'Total Reps' }]
+        : [{ key: 'totalDuration', label: 'Total Duration' }];
 
   return (
     <div className="space-y-4">
@@ -176,32 +214,25 @@ export default function Progress() {
         <>
           {/* Metric toggle */}
           <div className="flex gap-2">
-            <button
-              onClick={() => setMetric('maxWeight')}
-              className={`text-sm px-3 py-2 rounded-full transition-colors ${
-                metric === 'maxWeight'
-                  ? 'bg-primary text-white'
-                  : 'bg-surface-light text-text-muted hover:text-text-secondary'
-              }`}
-            >
-              Max Weight
-            </button>
-            <button
-              onClick={() => setMetric('totalVolume')}
-              className={`text-sm px-3 py-2 rounded-full transition-colors ${
-                metric === 'totalVolume'
-                  ? 'bg-primary text-white'
-                  : 'bg-surface-light text-text-muted hover:text-text-secondary'
-              }`}
-            >
-              Total Volume
-            </button>
+            {metricButtons.map((btn) => (
+              <button
+                key={btn.key}
+                onClick={() => setMetric(btn.key)}
+                className={`text-sm px-3 py-2 rounded-full transition-colors ${
+                  metric === btn.key
+                    ? 'bg-primary text-white'
+                    : 'bg-surface-light text-text-muted hover:text-text-secondary'
+                }`}
+              >
+                {btn.label}
+              </button>
+            ))}
           </div>
 
           {/* Chart */}
           <div className="bg-surface rounded-xl border border-border p-4">
             <h3 className="text-sm font-medium text-text-primary mb-3">
-              {selectedExerciseName} – {metric === 'maxWeight' ? 'Max Weight (kg)' : 'Total Volume (kg×reps)'}
+              {selectedExerciseName} – {metricLabel[metric]}
             </h3>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={chartData}>
@@ -231,20 +262,8 @@ export default function Progress() {
                   stroke="#6366f1"
                   strokeWidth={2}
                   dot={{ fill: '#6366f1', r: 4 }}
-                  name={metric === 'maxWeight' ? 'Max Weight (kg)' : 'Volume (kg×reps)'}
+                  name={metricLabel[metric]}
                 />
-                {chartData.some((d) => d.avgRpe !== null) && (
-                  <Line
-                    type="monotone"
-                    dataKey="avgRpe"
-                    stroke="#eab308"
-                    strokeWidth={1.5}
-                    strokeDasharray="4 4"
-                    dot={{ fill: '#eab308', r: 3 }}
-                    name="Avg RPE"
-                    yAxisId={0}
-                  />
-                )}
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -255,20 +274,29 @@ export default function Progress() {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left p-2.5 text-text-muted font-medium">Date</th>
-                  <th className="text-right p-2.5 text-text-muted font-medium">Max Weight</th>
-                  <th className="text-right p-2.5 text-text-muted font-medium">Volume</th>
-                  <th className="text-right p-2.5 text-text-muted font-medium">Avg RPE</th>
+                  {metricButtons.map((btn) => (
+                    <th key={btn.key} className="text-right p-2.5 text-text-muted font-medium">
+                      {btn.label}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {chartData.map((point) => (
                   <tr key={point.date} className="border-b border-border/50 last:border-0">
                     <td className="p-2.5 text-text-primary">{point.date}</td>
-                    <td className="p-2.5 text-text-secondary text-right">{point.maxWeight}kg</td>
-                    <td className="p-2.5 text-text-secondary text-right">{point.totalVolume}</td>
-                    <td className="p-2.5 text-text-secondary text-right">
-                      {point.avgRpe ?? '-'}
-                    </td>
+                    {trackingType === 'weighted' && (
+                      <>
+                        <td className="p-2.5 text-text-secondary text-right">{point.maxWeight}kg</td>
+                        <td className="p-2.5 text-text-secondary text-right">{point.totalVolume}</td>
+                      </>
+                    )}
+                    {trackingType === 'bodyweight' && (
+                      <td className="p-2.5 text-text-secondary text-right">{point.totalReps}</td>
+                    )}
+                    {trackingType === 'timed' && (
+                      <td className="p-2.5 text-text-secondary text-right">{point.totalDuration}s</td>
+                    )}
                   </tr>
                 ))}
               </tbody>

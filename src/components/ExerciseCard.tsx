@@ -31,7 +31,6 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
       weight_kg: newSkipped ? 0 : s.weight_kg,
       reps: newSkipped ? 0 : s.reps,
       duration_sec: newSkipped ? 0 : s.duration_sec,
-      rpe: newSkipped ? null : s.rpe,
     }));
     onUpdate({ ...entry, skipped: newSkipped, sets: newSets });
   };
@@ -110,17 +109,16 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
       {expanded && !skipped && (
         <div className="px-3 pb-3">
           {trackingType === 'timed' ? (
-            /* ---- TIMED: duration (sec) + RPE per round ---- */
+            /* ---- TIMED: duration (sec) per round ---- */
             <>
-              <div className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 text-xs text-text-muted uppercase mb-1.5">
+              <div className="grid grid-cols-[1.5rem_1fr] gap-2 text-xs text-text-muted uppercase mb-1.5">
                 <span>#</span>
                 <span>Duration (sec)</span>
-                <span>RPE</span>
               </div>
               {sets.map((set, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 items-center mb-2"
+                  className="grid grid-cols-[1.5rem_1fr] gap-2 items-center mb-2"
                 >
                   <span className="text-xs text-text-muted text-center">{set.set_number}</span>
                   <input
@@ -131,31 +129,20 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
                     className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="sec"
                   />
-                  <select
-                    value={set.rpe ?? ''}
-                    onChange={(e) => updateSet(i, 'rpe', e.target.value ? Number(e.target.value) : null)}
-                    className="w-full h-10 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
-                  >
-                    <option value="">-</option>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
-                      <option key={v} value={v}>{v}</option>
-                    ))}
-                  </select>
                 </div>
               ))}
             </>
           ) : trackingType === 'bodyweight' ? (
-            /* ---- BODYWEIGHT: reps + RPE (no weight) ---- */
+            /* ---- BODYWEIGHT: reps only (no weight) ---- */
             <>
-              <div className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 text-xs text-text-muted uppercase mb-1.5">
+              <div className="grid grid-cols-[1.5rem_1fr] gap-2 text-xs text-text-muted uppercase mb-1.5">
                 <span>#</span>
                 <span>Reps</span>
-                <span>RPE</span>
               </div>
               {sets.map((set, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[1.5rem_1fr_2.8rem] gap-2 items-center mb-2"
+                  className="grid grid-cols-[1.5rem_1fr] gap-2 items-center mb-2"
                 >
                   <span className="text-xs text-text-muted text-center">{set.set_number}</span>
                   <input
@@ -166,32 +153,21 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
                     className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="0"
                   />
-                  <select
-                    value={set.rpe ?? ''}
-                    onChange={(e) => updateSet(i, 'rpe', e.target.value ? Number(e.target.value) : null)}
-                    className="w-full h-10 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
-                  >
-                    <option value="">-</option>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
-                      <option key={v} value={v}>{v}</option>
-                    ))}
-                  </select>
                 </div>
               ))}
             </>
           ) : (
-            /* ---- WEIGHTED: kg + reps + RPE ---- */
+            /* ---- WEIGHTED: kg + reps ---- */
             <>
-              <div className="grid grid-cols-[1.5rem_1fr_1fr_2.8rem] gap-2 text-xs text-text-muted uppercase mb-1.5">
+              <div className="grid grid-cols-[1.5rem_1fr_1fr] gap-2 text-xs text-text-muted uppercase mb-1.5">
                 <span>#</span>
                 <span>Kg</span>
                 <span>Reps</span>
-                <span>RPE</span>
               </div>
               {sets.map((set, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[1.5rem_1fr_1fr_2.8rem] gap-2 items-center mb-2"
+                  className="grid grid-cols-[1.5rem_1fr_1fr] gap-2 items-center mb-2"
                 >
                   <span className="text-xs text-text-muted text-center">{set.set_number}</span>
                   <input
@@ -210,16 +186,6 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
                     className="w-full h-10 px-2 bg-surface-light border border-border rounded-lg text-center text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="0"
                   />
-                  <select
-                    value={set.rpe ?? ''}
-                    onChange={(e) => updateSet(i, 'rpe', e.target.value ? Number(e.target.value) : null)}
-                    className="w-full h-10 bg-surface-light border border-border rounded-lg text-base text-text-primary text-center focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
-                  >
-                    <option value="">-</option>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
-                      <option key={v} value={v}>{v}</option>
-                    ))}
-                  </select>
                 </div>
               ))}
             </>
