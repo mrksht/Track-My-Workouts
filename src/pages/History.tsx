@@ -35,11 +35,20 @@ export default function HistoryPage() {
     setExpandedId(sessionId);
 
     if (!exerciseDetails[sessionId]) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('session_exercises')
-        .select('*, exercise:exercises(name, category, muscle_group), original_exercise:exercises!session_exercises_original_exercise_id_fkey(name)')
+        // session_exercises has two FKs to exercises (exercise_id and
+        // original_exercise_id), so a bare `exercises` embed is ambiguous and
+        // PostgREST rejects it with PGRST201. Both sides must name their FK.
+        // tracking_type is required by the set rendering below.
+        .select('*, exercise:exercises!session_exercises_exercise_id_fkey(name, category, muscle_group, tracking_type), original_exercise:exercises!session_exercises_original_exercise_id_fkey(name)')
         .eq('session_id', sessionId)
         .order('sort_order');
+
+      // This query failing silently is what hid the broken embed above: `data`
+      // came back null, the panel rendered empty, and nothing reached the
+      // console. Surface it rather than swallowing the next one too.
+      if (error) console.error('Failed to load session exercises:', error);
 
       if (data) {
         // Load sets for each exercise
