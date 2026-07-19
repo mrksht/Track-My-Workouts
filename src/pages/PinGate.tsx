@@ -19,7 +19,7 @@ export default function PinGate() {
   };
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-[#0f0f1a] px-4">
+    <div className="min-h-dvh flex items-center justify-center bg-bg px-4">
       <form
         onSubmit={handleSubmit}
         className={`bg-surface rounded-2xl p-8 w-full max-w-sm shadow-xl border border-border ${shake ? 'animate-shake' : ''}`}
