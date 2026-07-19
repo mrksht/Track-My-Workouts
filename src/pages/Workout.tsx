@@ -175,7 +175,16 @@ export default function Workout() {
     {} as Record<string, WorkoutExerciseEntry[]>
   );
 
-  const sectionOrder = ['explosive', 'strength', 'core', 'finisher', 'cardio', 'mobility'];
+  // Order sections by where each first appears in the plan (entries arrive
+  // sorted by sort_order), so the workout follows the order the day was
+  // written in rather than a fixed section priority. This also means any
+  // section renders automatically — a hardcoded list silently dropped
+  // 'agility', hiding Day 3's entire footwork block.
+  const sectionOrder = entries.reduce<string[]>((order, entry) => {
+    const section = entry.templateExercise.section;
+    if (!order.includes(section)) order.push(section);
+    return order;
+  }, []);
 
   if (loading) {
     return (
