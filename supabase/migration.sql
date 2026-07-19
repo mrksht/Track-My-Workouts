@@ -16,7 +16,7 @@ drop table if exists exercises cascade;
 create table exercises (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  category text not null check (category in ('explosive', 'strength', 'core', 'cardio', 'mobility', 'finisher', 'warmup')),
+  category text not null check (category in ('explosive', 'strength', 'core', 'cardio', 'mobility', 'finisher', 'warmup', 'agility')),
   tracking_type text not null default 'weighted' check (tracking_type in ('weighted', 'bodyweight', 'timed')),
   muscle_group text not null,
   created_at timestamptz default now()
@@ -36,7 +36,7 @@ create table template_exercises (
   id uuid primary key default gen_random_uuid(),
   template_id uuid not null references day_templates(id) on delete cascade,
   exercise_id uuid not null references exercises(id) on delete cascade,
-  section text not null check (section in ('explosive', 'strength', 'core', 'finisher', 'cardio', 'mobility', 'stretch')),
+  section text not null check (section in ('explosive', 'strength', 'core', 'finisher', 'cardio', 'mobility', 'stretch', 'agility')),
   sets int not null,
   reps text not null,
   sort_order int not null default 0
