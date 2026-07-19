@@ -1,7 +1,7 @@
 export interface Exercise {
   id: string;
   name: string;
-  category: 'explosive' | 'strength' | 'core' | 'cardio' | 'mobility' | 'finisher' | 'warmup';
+  category: 'explosive' | 'strength' | 'core' | 'cardio' | 'mobility' | 'finisher' | 'warmup' | 'agility';
   tracking_type: 'weighted' | 'bodyweight' | 'timed';
   muscle_group: string;
 }
