@@ -52,7 +52,7 @@ export default function PinGate() {
 
         <button
           type="submit"
-          className="w-full mt-4 py-3 bg-action hover:bg-action-hover text-on-action font-semibold rounded-xl transition-colors"
+          className="w-full mt-4 py-3 bg-action hover:bg-action-hover text-on-action font-semibold rounded-xl transition-colors glow-action"
         >
           Unlock
         </button>

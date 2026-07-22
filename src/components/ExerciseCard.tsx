@@ -15,6 +15,7 @@ const SECTION_COLORS: Record<string, string> = {
   finisher: 'bg-primary/20 text-primary',
   cardio: 'bg-accent-green/20 text-accent-green',
   mobility: 'bg-purple-500/20 text-purple-400',
+  agility: 'bg-accent-red/15 text-accent-red',
 };
 
 export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
@@ -45,7 +46,7 @@ export default function ExerciseCard({ entry, onUpdate, onSwap }: Props) {
 
   return (
     <div
-      className={`bg-surface rounded-xl border transition-all overflow-hidden ${
+      className={`bg-surface rounded-xl border transition-all overflow-hidden glow-card ${
         skipped ? 'border-border opacity-50' : 'border-border'
       }`}
     >

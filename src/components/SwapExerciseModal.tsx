@@ -82,7 +82,7 @@ export default function SwapExerciseModal({
               onClick={() => setSelectedCategory('')}
               className={`text-xs px-3 py-2 rounded-full transition-colors ${
                 !selectedCategory
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary text-bg'
                   : 'bg-surface-light text-text-muted hover:text-text-secondary'
               }`}
             >
@@ -94,7 +94,7 @@ export default function SwapExerciseModal({
                 onClick={() => setSelectedCategory(cat === selectedCategory ? '' : cat)}
                 className={`text-xs px-3 py-2 rounded-full capitalize transition-colors ${
                   cat === selectedCategory
-                    ? 'bg-primary text-white'
+                    ? 'bg-primary text-bg'
                     : 'bg-surface-light text-text-muted hover:text-text-secondary'
                 }`}
               >

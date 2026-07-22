@@ -220,7 +220,7 @@ export default function Progress() {
                 onClick={() => setMetric(btn.key)}
                 className={`text-sm px-3 py-2 rounded-full transition-colors ${
                   metric === btn.key
-                    ? 'bg-primary text-white'
+                    ? 'bg-primary text-bg'
                     : 'bg-surface-light text-text-muted hover:text-text-secondary'
                 }`}
               >

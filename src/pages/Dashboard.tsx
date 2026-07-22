@@ -133,7 +133,7 @@ export default function Dashboard() {
               <button
                 key={template.id}
                 onClick={() => navigate(`/workout?template=${template.id}`)}
-                className={`w-full text-left bg-surface hover:bg-surface-light rounded-xl p-4 border transition-all ${
+                className={`w-full text-left bg-surface hover:bg-surface-light rounded-xl p-4 border transition-all glow-card ${
                   done
                     ? 'border-accent-green/30'
                     : 'border-border hover:border-primary/50'

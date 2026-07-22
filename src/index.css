@@ -1,181 +1,180 @@
 @import "tailwindcss";
 
-/* Do not scan the knowledge base. Tailwind v4's automatic source detection
-   walks markdown too, so class names quoted in docs/ prose get generated as
-   real utilities and end up in the shipped stylesheet. */
+/* Do not scan the knowledge base — Tailwind v4 walks markdown and would
+   generate utilities from class names quoted in docs/ prose. */
 @source not "../docs";
 
 /* =========================================================================
-   DARK NAVY THEME — deep blue ground, orange action, light-blue structure.
+   NEON SYNTHWAVE — deep purple-black ground, electric cyan / magenta /
+   violet that emit light. Colors are distributed across sections; glow is
+   intentional (actions, active state, chips, card edges), never ambient.
 
-   Tier 1: private raw ramps in :root (generate no utilities).
-   Tier 2: semantic tokens in @theme (generate utilities; components use these).
-   The semantic split is what let this flip from light to dark by reassigning
-   token values only — no component changed to re-theme the app.
+   Tier 1: private raw ramps (:root, no utilities).
+   Tier 2: semantic tokens (@theme, generate utilities). A re-theme is a
+   values-only change here; components are untouched except for opt-in glow.
    ========================================================================= */
 :root {
-  --canvas:    #0b1220;  /* deep navy ground */
+  --canvas:   #0d0619;  /* deep purple-black */
 
-  --slate-100: #f1f5f9;
-  --slate-200: #e2e8f0;
-  --slate-300: #cbd5e1;
-  --slate-400: #94a3b8;
-  --slate-500: #64748b;
-  --slate-600: #475569;
-  --slate-700: #334155;
-  --slate-800: #1e293b;
-  --slate-900: #0f172a;
+  --void:        #0d0619;
+  --surface-1:   #1a1030;  /* card */
+  --surface-2:   #241640;  /* raised / chip */
+  --surface-3:   #2e1b52;  /* hover */
+  --line:        #3a2a5c;  /* purple border */
 
-  --sky-300:   #7dd3fc;
-  --sky-400:   #38bdf8;
-  --blue-400:  #60a5fa;
-  --blue-500:  #3b82f6;
-  --blue-600:  #2563eb;
-  --blue-700:  #1d4ed8;
+  --ink:       #f2ecff;  /* near-white, lavender-tinted */
+  --ink-muted: #b8a9d9;
 
-  --orange-300: #fdba74;
-  --orange-400: #fb923c;
-  --orange-500: #f97316;
+  /* Neon accents */
+  --neon-cyan:    #22d3ee;
+  --neon-sky:     #38bdf8;
+  --neon-magenta: #f472b6;
+  --neon-pink:    #e879f9;
+  --neon-violet:  #a78bfa;
+  --neon-lime:    #a3e635;
+  --neon-action:  #ec4899;  /* hot magenta — the action fill */
 
-  --navy-surface:    #17233f;
-  --navy-sunken:     #0f1a30;
-  --navy-raised:     #1f2d4d;
-  --navy-raised-2:   #26365c;
-  --navy-border:     #253352;
-  --navy-border-str: #34456b;
-  --navy-tint:       #0f2942;
-
-  --red-400:     #f87171;
-  --amber-400:   #fbbf24;
-  --emerald-400: #34d399;
-
-  --ink:       #e8eef7;  /* near-white primary text */
-  --ink-muted: #9fb0cc;  /* blue-tinted muted text */
+  /* Chip text (brighter, for tinted chip backgrounds) */
+  --cyan-200:    #67e8f9;
+  --magenta-200: #f9a8d4;
+  --violet-200:  #c4b5fd;
+  --pink-200:    #f0abfc;
 }
 
 /* =========================================================================
-   Semantic tier. Contrast verified against the dark ground (>=4.5:1 text):
-     text on bg ............. 16.05:1     white on action ....... FAILS (2.8)
-     text on surface ........ 13.35:1     navy on action ........ -6.68:1  ✓
-     text-muted on bg .......  8.52:1     action as text on bg ..  8.27:1
-     cool (blue) on bg ......  7.36:1     danger/warn/positive .. 6.8/11.2/9.7
-
-   The orange button carries DARK (navy) text, not white — the inverse of the
-   light theme. Every orange shade fails white text on dark; navy passes.
+   Semantic tier. Contrast verified on the dark ground (text >=4.5:1):
+     text on bg .......... 17.2:1   white on action ..... FAILS (3.5)
+     text-muted on bg ....  9.2:1   void-on-action ...... -5.63:1  ✓
+     every neon accent as text on bg passes 7.3-13.2:1
+   The action button carries DARK text — white fails on neon magenta.
    ========================================================================= */
 @theme {
-  --color-bg:             var(--canvas);
-  --color-surface:        var(--navy-surface);
-  --color-surface-sunken: var(--navy-sunken);
+  --color-bg:             var(--void);
+  --color-surface:        var(--surface-1);
+  --color-surface-sunken: #140a26;
 
   --color-text:       var(--ink);
   --color-text-muted: var(--ink-muted);
 
-  --color-border:        var(--navy-border);
-  --color-border-strong: var(--navy-border-str);
+  --color-border:        var(--line);
+  --color-border-strong: #4c3575;
 
-  /* Action — orange fill with NAVY text on it. One per screen. */
-  --color-action:       var(--orange-500);
-  --color-action-hover: var(--orange-400);
-  --color-action-text:  var(--orange-400);  /* orange used AS text on dark bg */
-  --color-on-action:    var(--canvas);       /* text/icon color ON an orange fill */
+  --color-action:       var(--neon-action);
+  --color-action-hover: #f0459b;
+  --color-action-text:  var(--neon-magenta);  /* magenta AS text on dark bg */
+  --color-on-action:    var(--void);           /* dark text ON the magenta fill */
 
-  /* Structure — light blue. Nav, links, data, chips. */
-  --color-cool:      var(--blue-400);
-  --color-cool-tint: var(--navy-tint);
+  --color-cool:      var(--neon-cyan);
+  --color-cool-tint: var(--surface-2);
 
-  /* Status roles. */
-  --color-danger:   var(--red-400);
-  --color-warn:     var(--amber-400);
-  --color-positive: var(--emerald-400);
+  --color-danger:   #fb7185;
+  --color-warn:     #fbbf24;
+  --color-positive: var(--neon-lime);
 
-  /* Section intensity axis — dark tints carrying light text (all >=8.8:1). */
-  --color-heat-hot-bg:       #3a1e0e;
-  --color-heat-hot-text:     var(--orange-300);
-  --color-heat-mid-bg:       var(--slate-800);
-  --color-heat-mid-text:     var(--slate-300);
-  --color-heat-cool-bg:      var(--navy-tint);
-  --color-heat-cool-text:    var(--sky-300);
-  --color-heat-coolest-bg:   #0c1f34;
-  --color-heat-coolest-text: #bae6fd;
+  /* Section intensity axis — funky neon spread. */
+  --color-heat-hot-bg:       var(--surface-2);
+  --color-heat-hot-text:     var(--magenta-200);
+  --color-heat-mid-bg:       var(--surface-2);
+  --color-heat-mid-text:     var(--cyan-200);
+  --color-heat-cool-bg:      var(--surface-2);
+  --color-heat-cool-text:    var(--violet-200);
+  --color-heat-coolest-bg:   var(--surface-2);
+  --color-heat-coolest-text: var(--pink-200);
 
-  /* Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.625rem;
   --radius-lg: 0.875rem;
   --radius-xl: 1.25rem;
 
-  /* Elevation. On dark, surface-lightness carries most depth; shadows are
-     black-based so they read at all against a navy ground. */
-  --shadow-card:    0 1px 2px rgb(0 0 0 / 0.30), 0 1px 3px rgb(0 0 0 / 0.40);
-  --shadow-raised:  0 2px 4px rgb(0 0 0 / 0.30), 0 4px 12px rgb(0 0 0 / 0.45);
-  --shadow-overlay: 0 2px 8px rgb(0 0 0 / 0.40), 0 8px 24px rgb(0 0 0 / 0.55);
+  --shadow-card:    0 1px 2px rgb(0 0 0 / 0.4), 0 8px 30px -18px rgb(34 211 238 / 0.35);
+  --shadow-raised:  0 2px 4px rgb(0 0 0 / 0.4), 0 12px 40px -18px rgb(168 139 250 / 0.4);
+  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.6), 0 0 60px -20px rgb(236 72 153 / 0.4);
 
-  /* Type scale. --text-* is font size in v4; --font-* is family only. */
   --text-label:     0.6875rem;
   --text-metric-sm: 1.75rem;
   --text-metric:    2.5rem;
   --text-metric-lg: 3.25rem;
 
-  /* Breakpoints extend Tailwind's defaults; all rem to keep variant order. */
   --breakpoint-mid:  37.5rem;
   --breakpoint-wide: 52.5rem;
 }
 
-/* Chart tokens — @theme static forces emission. They are consumed only as
-   var() in Recharts props (never as a utility class), so plain @theme would
-   tree-shake them out and strokes would fall back to black silently. */
+/* Chart tokens — @theme static forces emission (var()-only consumption in
+   Recharts would otherwise be tree-shaken to black). Neon on dark. */
 @theme static {
-  --color-chart-line:           var(--blue-400);
-  --color-chart-dot:            var(--blue-400);
-  --color-chart-grid:           var(--navy-border);
-  --color-chart-axis:           var(--slate-600);
-  --color-chart-tooltip-bg:     var(--navy-surface);
-  --color-chart-tooltip-border: var(--navy-border-str);
+  --color-chart-line:           var(--neon-cyan);
+  --color-chart-dot:            var(--neon-magenta);
+  --color-chart-grid:           #2e1b52;
+  --color-chart-axis:           #4c3575;
+  --color-chart-tooltip-bg:     var(--surface-1);
+  --color-chart-tooltip-border: #4c3575;
   --color-chart-tooltip-text:   var(--ink);
 }
 
 /* =========================================================================
-   TEMPORARY — legacy token aliases, dark values.
-
-   Screens still reference the original token names. Tailwind v4 emits nothing
-   for an unknown utility, so these keep every screen coherent until the last
-   call site is converted in U8, which deletes this block. --color-primary maps
-   to the lighter blue because text-primary (blue-as-text) is used 33x vs 4
-   fill uses; hover (--color-primary-dark) darkens so white-text buttons pass.
+   TEMPORARY legacy aliases — synthwave values. Keep every un-migrated screen
+   coherent until U8 removes this block. Section chips use the accent-*
+   aliases (bg-accent-X/20 text-accent-X), so mapping them to neon spreads
+   color across sections automatically. primary -> cyan (33 text uses vs a
+   few fill chips, which now carry dark text via text-bg).
    ========================================================================= */
 @theme {
-  --color-primary:         var(--blue-500);
-  --color-primary-dark:    var(--blue-700);
-  --color-surface-light:   var(--navy-raised);
-  --color-surface-lighter: var(--navy-raised-2);
-  --color-accent-green:    var(--emerald-400);
-  --color-accent-red:      var(--red-400);
-  --color-accent-yellow:   var(--amber-400);
-  --color-accent-blue:     var(--blue-400);
+  --color-primary:         var(--neon-cyan);
+  --color-primary-dark:    #0891b2;
+  --color-surface-light:   var(--surface-2);
+  --color-surface-lighter: var(--surface-3);
+  --color-accent-green:    var(--neon-lime);    /* cardio */
+  --color-accent-red:      var(--neon-magenta); /* explosive */
+  --color-accent-yellow:   var(--neon-violet);  /* core */
+  --color-accent-blue:     var(--neon-cyan);    /* strength */
   --color-text-primary:    var(--ink);
   --color-text-secondary:  var(--ink-muted);
+}
+
+/* =========================================================================
+   Neon glow — opt-in utilities, applied to intentional elements only.
+   ========================================================================= */
+@utility glow-action {
+  box-shadow: 0 0 18px -3px var(--color-action), 0 0 46px -14px var(--color-action);
+}
+@utility glow-card {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--neon-cyan) 16%, transparent),
+              0 12px 38px -20px color-mix(in oklab, var(--neon-cyan) 55%, transparent);
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 16px color-mix(in oklab, currentColor 65%, transparent);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 14px -4px var(--color-action), 0 0 36px -16px var(--color-action); }
+  50%      { box-shadow: 0 0 24px -2px var(--color-action), 0 0 58px -10px var(--color-action); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glow-action { animation: pulse-glow 2.8s ease-in-out infinite; }
 }
 
 @layer base {
   body {
     background-color: var(--color-bg);
+    /* faint synthwave bloom in the corners */
+    background-image:
+      radial-gradient(60rem 40rem at 100% 0%, rgb(236 72 153 / 0.10), transparent 60%),
+      radial-gradient(50rem 40rem at 0% 100%, rgb(34 211 238 / 0.10), transparent 60%);
+    background-attachment: fixed;
     color: var(--color-text);
     -webkit-font-smoothing: antialiased;
     min-height: 100dvh;
   }
 }
 
-#root {
-  min-height: 100dvh;
-}
+#root { min-height: 100dvh; }
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
 }
-
-.animate-shake {
-  animation: shake 0.4s ease-in-out;
-}
+.animate-shake { animation: shake 0.4s ease-in-out; }

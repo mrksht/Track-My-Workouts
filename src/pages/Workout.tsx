@@ -263,7 +263,7 @@ export default function Workout() {
       <button
         onClick={saveWorkout}
         disabled={saving}
-        className="w-full py-3 bg-action hover:bg-action-hover text-on-action font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+        className="w-full py-3 bg-action hover:bg-action-hover text-on-action font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 glow-action"
       >
         {saving ? (
           <Loader2 className="w-5 h-5 animate-spin" />
